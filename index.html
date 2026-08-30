@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CÚBIKO · Impresiones 3D personalizadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8F2;
+    --pink:#F6B9D2;
+    --pink-deep:#E88FB4;
+    --lavender:#D6BFF0;
+    --lavender-deep:#B491E0;
+    --mint:#BCEBD9;
+    --butter:#FCE49B;
+    --plum:#5B3B78;
+    --plum-soft:#8467A0;
+    --ink:#4A2E63;
+    --white:#FFFFFF;
+    --shadow: 0 10px 24px rgba(91,59,120,0.14);
+    --shadow-sm: 0 4px 10px rgba(91,59,120,0.12);
+    --radius: 22px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{
+    scroll-behavior:smooth;
+    overflow-x:hidden;
+    width:100%;
+  }
+
+  body{
+    font-family:'Quicksand', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    width:100%;
+    max-width:100vw;
+    position:relative;
+    overscroll-behavior-x:none;
+    touch-action:pan-y;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  section, header, footer, .hero, .wrap, .marquee, .envios{
+    max-width:100vw;
+  }
+
+  h1,h2,h3, .display{
+    font-family:'Baloo 2', sans-serif;
+  }
+
+  a{text-decoration:none; color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%; display:block;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- decorative blobs ---------- */
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(2px);
+    opacity:.55;
+    z-index:0;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(255,248,242,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(180,145,224,0.18);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px;
+    max-width:1180px;
+    margin:0 auto;
+    width:100%;
+    gap:10px;
+  }
+  .logo-tiles{
+    display:flex;
+    gap:4px;
+    align-items:center;
+  }
+  .tile{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:16px;
+    color:var(--white);
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    box-shadow: 0 3px 0 rgba(91,59,120,0.25), var(--shadow-sm);
+    transform:rotate(var(--r,0deg));
+  }
+  .t-pink{background:var(--pink-deep);}
+  .t-lav{background:var(--lavender-deep);}
+  .t-mint{background:#6FCBA9;}
+  .t-butter{background:#E9B94B;}
+
+  nav ul{
+    display:flex;
+    gap:30px;
+    font-weight:600;
+    font-size:15px;
+  }
+  nav ul a{
+    position:relative;
+    padding:6px 2px;
+    transition:color .2s;
+  }
+  nav ul a:hover{color:var(--pink-deep);}
+  nav ul a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-2px;
+    width:0%; height:2px;
+    background:var(--pink-deep);
+    transition:width .25s ease;
+  }
+  nav ul a:hover::after{width:100%;}
+
+  /* ---------- desplegable de temáticas en el menú ---------- */
+  .temas-dropdown{
+    position:relative;
+  }
+  .temas-dropdown summary{
+    cursor:pointer;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .temas-dropdown summary::-webkit-details-marker{display:none;}
+  .temas-dropdown summary::after{
+    content:"▾";
+    font-size:12px;
+    color:var(--plum-soft);
+    transition:transform .2s ease;
+  }
+  .temas-dropdown[open] summary::after{transform:rotate(180deg);}
+  .temas-dropdown summary:hover{color:var(--pink-deep);}
+
+  .temas-submenu{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .temas-submenu a{
+    display:flex;
+    align-items:center;
+    padding:15px 18px;
+    font-size:16px;
+    font-weight:700;
+    color:var(--plum);
+    border-radius:16px;
+    transition:background .18s ease, transform .18s ease;
+  }
+  .temas-submenu a:hover{background:#FCE7EF; transform:translateX(3px);}
+
+  .nav-cta{
+    background:var(--plum);
+    color:var(--white);
+    padding:10px 20px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:14px;
+    box-shadow:var(--shadow-sm);
+    transition:transform .2s ease;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{transform:translateY(-2px);}
+
+  .menu-toggle{display:none; font-size:26px; background:none; border:none; color:var(--plum); cursor:pointer;}
+
+  /* ---------- carrito ---------- */
+  .cart-toggle{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:44px; height:44px;
+    background:var(--white);
+    border:none;
+    border-radius:14px;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    transition:transform .2s ease;
+    flex-shrink:0;
+  }
+  .cart-toggle:hover{transform:translateY(-2px);}
+  .cart-count{
+    position:absolute;
+    top:-6px; right:-6px;
+    background:var(--pink-deep);
+    color:var(--white);
+    font-family:'Baloo 2',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    min-width:19px; height:19px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 3px;
+    box-shadow:0 2px 0 rgba(91,59,120,0.25);
+  }
+
+  .cart-overlay{
+    position:fixed; inset:0;
+    background:rgba(74,46,99,0.35);
+    backdrop-filter:blur(2px);
+    z-index:90;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .25s ease, visibility .25s ease;
+  }
+  .cart-overlay.open{opacity:1; visibility:visible;}
+
+  .cart-drawer{
+    position:fixed;
+    top:0; right:0;
+    height:100%;
+    width:min(400px, 92vw);
+    background:var(--cream);
+    z-index:95;
+    display:flex;
+    flex-direction:column;
+    transform:translateX(100%);
+    transition:transform .3s ease;
+    box-shadow:-10px 0 30px rgba(91,59,120,0.2);
+  }
+  .cart-drawer.open{transform:translateX(0);}
+
+  .cart-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 24px;
+    background:var(--white);
+    border-bottom:1px solid rgba(180,145,224,0.18);
+  }
+  .cart-header h3{font-size:20px; color:var(--plum);}
+  .cart-close{
+    width:34px; height:34px;
+    border-radius:10px;
+    border:none;
+    background:var(--cream);
+    color:var(--plum);
+    font-size:16px;
+    cursor:pointer;
+  }
+  .cart-close:hover{background:#F3E4EE;}
+
+  .cart-items{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .cart-empty{
+    text-align:center;
+    color:var(--plum-soft);
+    font-size:14px;
+    padding:60px 10px;
+  }
+  .cart-item{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    background:var(--white);
+    border-radius:16px;
+    padding:12px;
+    box-shadow:var(--shadow-sm);
+  }
+  .cart-item-info{flex:1; min-width:0;}
+  .cart-item-info h4{
+    font-size:14.5px;
+    color:var(--plum);
+    font-weight:700;
+    margin-bottom:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .cart-item-info span{
+    font-size:12.5px;
+    color:var(--plum-soft);
+    font-weight:600;
+  }
+  .qty-control{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--cream);
+    border-radius:20px;
+    padding:4px 6px;
+  }
+  .qty-control button{
+    width:24px; height:24px;
+    border-radius:50%;
+    border:none;
+    background:var(--white);
+    color:var(--plum);
+    font-weight:800;
+    font-size:14px;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    line-height:1;
+  }
+  .qty-control span{
+    min-width:16px;
+    text-align:center;
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--plum);
+  }
+  .cart-item-remove{
+    background:none;
+    border:none;
+    color:#C97A9A;
+    font-size:16px;
+    cursor:pointer;
+    padding:4px;
+  }
+
+  .cart-footer{
+    padding:20px 24px 26px;
+    background:var(--white);
+    border-top:1px solid rgba(180,145,224,0.18);
+  }
+  .cart-total-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'Baloo 2',sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--plum);
+    margin-bottom:16px;
+  }
+  .cart-note{
+    font-size:12px;
+    color:var(--plum-soft);
+    margin-top:10px;
+    text-align:center;
+    line-height:1.5;
+  }
+  .checkout-btn{
+    width:100%;
+    justify-content:center;
+    border:none;
+    cursor:pointer;
+  }
+  .checkout-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    box-shadow:none !important;
+    transform:none !important;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:70px 28px 90px;
+    overflow:hidden;
+    width:100%;
+  }
+  .hero-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap:50px;
+    align-items:center;
+    position:relative;
+    z-index:2;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--white);
+    padding:7px 16px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.03em;
+    color:var(--pink-deep);
+    box-shadow:var(--shadow-sm);
+    margin-bottom:22px;
+  }
+  .hero-title{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 6px;
+    margin-bottom:22px;
+  }
+  .hero-title span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(28px, 4.2vw, 46px);
+    font-weight:800;
+    color:var(--white);
+    padding:8px 14px;
+    border-radius:12px;
+    box-shadow:0 5px 0 rgba(91,59,120,0.22), var(--shadow);
+    transform:rotate(var(--r,0deg));
+  }
+  .hero p.sub{
+    font-size:17px;
+    color:var(--plum-soft);
+    max-width:480px;
+    margin-bottom:30px;
+    line-height:1.6;
+  }
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    flex:1 1 220px;
+    padding:16px 26px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:15px;
+    text-align:center;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn svg{flex-shrink:0;}
+  .btn-primary{
+    background:var(--pink-deep);
+    color:var(--white);
+    box-shadow:0 6px 0 #C96E96, var(--shadow);
+  }
+  .btn-primary:hover{transform:translateY(-3px);}
+  .btn-secondary{
+    background:var(--pink-deep);
+    color:var(--white);
+    box-shadow:0 6px 0 #C96E96, var(--shadow);
+  }
+  .btn-secondary:hover{transform:translateY(-3px);}
+
+  .hero-visual{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-auto-rows:1fr;
+    gap:16px;
+  }
+  .hero-visual .card{
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    background:var(--white);
+    aspect-ratio:1/1;
+  }
+  .hero-visual .card img{width:100%; height:100%; object-fit:cover;}
+  .hero-visual .card.tall{grid-row: span 2; aspect-ratio:auto;}
+
+  /* ---------- marquee ---------- */
+  .marquee{
+    background:var(--plum);
+    color:var(--cream);
+    padding:13px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    position:relative;
+  }
+  .marquee-track{
+    display:inline-flex;
+    gap:40px;
+    animation:scroll 26s linear infinite;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:.03em;
+  }
+  .marquee-track span{opacity:.9;}
+  @keyframes scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  /* ---------- section shared ---------- */
+  section{padding:90px 0;}
+  .section-head{
+    text-align:center;
+    max-width:600px;
+    margin:0 auto 54px;
+  }
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{
+    font-size:clamp(28px,4vw,40px);
+    color:var(--plum);
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .section-head p{
+    color:var(--plum-soft);
+    font-size:16px;
+    line-height:1.6;
+  }
+
+  /* ---------- productos ---------- */
+  .temas-menu{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+    padding:6px 4px 30px;
+    margin-bottom:34px;
+    border-bottom:1px dashed rgba(180,145,224,0.35);
+  }
+  .tema-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    white-space:normal;
+    text-align:center;
+    background:var(--white);
+    color:var(--plum);
+    font-weight:700;
+    font-size:16px;
+    padding:15px 18px;
+    border-radius:24px;
+    border:none;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    transition:transform .18s ease, background .18s ease, color .18s ease;
+  }
+  .tema-pill:hover{transform:translateY(-2px);}
+  .tema-pill.active{
+    background:var(--pink-deep);
+    color:var(--white);
+    box-shadow:0 6px 0 #C96E96, var(--shadow-sm);
+  }
+  .temas-titulo-activo{
+    text-align:center;
+    color:var(--plum-soft);
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:30px;
+    margin-top:-14px;
+  }
+  .temas-titulo-activo b{color:var(--plum);}
+  .sin-resultados{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    background:var(--white);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+  }
+  .sin-resultados p{color:var(--plum-soft); font-size:15px; margin-bottom:18px; line-height:1.6;}
+
+  .grid-productos{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:26px;
+  }
+  .producto{
+    background:var(--white);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    transition:transform .25s ease, box-shadow .25s ease;
+    position:relative;
+  }
+  .producto:hover{
+    transform:translateY(-8px) rotate(-0.6deg);
+    box-shadow:var(--shadow);
+  }
+  .producto .foto{
+    aspect-ratio:1/1;
+    overflow:hidden;
+    background:linear-gradient(135deg,var(--lavender),var(--pink));
+  }
+  .producto .foto img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .4s ease;
+  }
+  .producto:hover .foto img{transform:scale(1.06);}
+  .producto .info{padding:20px 20px 22px;}
+  .producto .badge{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    color:var(--pink-deep);
+    background:#FCE7EF;
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+    letter-spacing:.03em;
+  }
+  .producto h3{
+    font-size:19px;
+    color:var(--plum);
+    margin-bottom:6px;
+    font-weight:700;
+  }
+  .producto p{
+    font-size:14px;
+    color:var(--plum-soft);
+    line-height:1.5;
+    margin-bottom:14px;
+  }
+  .producto .fila{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .precio{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    color:var(--plum);
+  }
+  .mini-btn{
+    background:var(--mint);
+    color:#1F5C46;
+    font-weight:700;
+    font-size:13px;
+    padding:9px 16px;
+    border-radius:20px;
+    transition:transform .2s ease;
+  }
+  .mini-btn:hover{transform:translateY(-2px);}
+
+  /* ---------- como pedir ---------- */
+  .pasos{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+  }
+  .paso{
+    background:var(--white);
+    border-radius:var(--radius);
+    padding:28px 22px;
+    box-shadow:var(--shadow-sm);
+    text-align:center;
+  }
+  .paso .num{
+    width:44px; height:44px;
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:18px;
+    color:var(--white);
+    margin:0 auto 16px;
+    box-shadow:0 4px 0 rgba(91,59,120,0.2);
+  }
+  .paso:nth-child(1) .num{background:var(--pink-deep);}
+  .paso:nth-child(2) .num{background:var(--lavender-deep);}
+  .paso:nth-child(3) .num{background:#E9B94B;}
+  .paso:nth-child(4) .num{background:#6FCBA9;}
+  .paso h3{font-size:16px; color:var(--plum); margin-bottom:8px;}
+  .paso p{font-size:13.5px; color:var(--plum-soft); line-height:1.55;}
+
+  /* ---------- envios ---------- */
+  .envios{
+    background:linear-gradient(135deg, var(--lavender) 0%, var(--pink) 100%);
+    border-radius:32px;
+    max-width:1180px;
+    margin:0 auto;
+    padding:60px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .envios::before{
+    content:"";
+    position:absolute;
+    width:260px; height:260px;
+    background:rgba(255,255,255,0.25);
+    border-radius:50%;
+    top:-90px; right:-60px;
+  }
+  .envios h2{
+    font-size:clamp(26px,3.4vw,34px);
+    color:var(--white);
+    margin-bottom:16px;
+  }
+  .envios p{
+    color:rgba(255,255,255,0.92);
+    line-height:1.65;
+    font-size:15.5px;
+    margin-bottom:18px;
+  }
+  .lista-envio{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .lista-envio li{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    color:var(--white);
+    font-weight:600;
+    font-size:14.5px;
+  }
+  .lista-envio li b{font-weight:800;}
+  .check{
+    width:22px; height:22px;
+    background:rgba(255,255,255,0.35);
+    border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    font-size:12px;
+  }
+  .mapa-card{
+    background:rgba(255,255,255,0.9);
+    border-radius:20px;
+    padding:26px;
+    box-shadow:var(--shadow);
+  }
+  .mapa-card .fila-info{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px dashed rgba(91,59,120,0.2);
+    font-size:14px;
+  }
+  .mapa-card .fila-info:last-child{border-bottom:none;}
+  .mapa-card .fila-info span:first-child{color:var(--plum-soft); font-weight:600;}
+  .mapa-card .fila-info span:last-child{color:var(--plum); font-weight:700;}
+
+  /* ---------- testimonios / galeria mini ---------- */
+  .galeria{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+  }
+  .galeria .foto{
+    aspect-ratio:1/1;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .galeria .foto img{width:100%; height:100%; object-fit:cover; transition:transform .4s;}
+  .galeria .foto:hover img{transform:scale(1.08);}
+
+  /* ---------- contacto / footer ---------- */
+  footer{
+    background:var(--plum);
+    color:var(--cream);
+    padding:70px 0 30px;
+    margin-top:40px;
+  }
+  .footer-top{
+    display:grid;
+    grid-template-columns:1.3fr 1fr 1fr;
+    gap:50px;
+    margin-bottom:50px;
+  }
+  .footer-top h3{
+    font-size:15px;
+    color:var(--butter);
+    margin-bottom:16px;
+    letter-spacing:.03em;
+  }
+  .footer-top p, .footer-top a{
+    font-size:14px;
+    color:rgba(255,248,242,0.78);
+    line-height:1.8;
+    display:block;
+  }
+  .footer-top a:hover{color:var(--pink);}
+  .footer-brand p{max-width:280px; color:rgba(255,248,242,0.7); margin-top:12px;}
+  .social{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+  }
+  .social a{
+    width:38px; height:38px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.1);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    transition:background .2s;
+  }
+  .social a:hover{background:var(--pink-deep);}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,0.14);
+    padding-top:24px;
+    text-align:center;
+    font-size:13px;
+    color:rgba(255,248,242,0.6);
+  }
+
+  /* ---------- responsive ---------- */
+  @media (min-width:921px){
+    .temas-dropdown[open] .temas-submenu{
+      position:absolute;
+      top:34px; left:-24px;
+      background:var(--white);
+      box-shadow:var(--shadow);
+      border-radius:20px;
+      padding:14px;
+      width:560px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:2px;
+      z-index:60;
+    }
+    .temas-dropdown[open] .temas-submenu a{
+      font-size:14px;
+      padding:11px 14px;
+    }
+    .temas-menu{grid-template-columns:repeat(4, 1fr);}
+  }
+  @media (max-width:920px){
+    nav ul{display:none;}
+    .menu-toggle{display:block;}
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-visual{order:-1;}
+    .grid-productos{grid-template-columns:repeat(2,1fr);}
+    .pasos{grid-template-columns:repeat(2,1fr);}
+    .envios{grid-template-columns:1fr; padding:40px 26px;}
+    .footer-top{grid-template-columns:1fr; gap:34px;}
+    .galeria{grid-template-columns:repeat(3,1fr);}
+    .nav-cta{display:none;}
+  }
+  @media (max-width:560px){
+    .grid-productos{grid-template-columns:1fr;}
+    .pasos{grid-template-columns:1fr;}
+    .galeria{grid-template-columns:repeat(2,1fr);}
+    .hero-visual{grid-template-columns:1fr 1fr;}
+    .tile{width:24px; height:24px; font-size:13px;}
+    .nav-cta{padding:9px 14px; font-size:13px;}
+    .nav{padding:12px 16px;}
+    .cart-toggle{width:38px; height:38px; font-size:16px;}
+    .tema-pill{font-size:14px; padding:13px 14px;}
+    .hero-actions .btn{flex:1 1 100%;}
+  }
+
+  @media (max-width:400px){
+    .nav-cta span.full{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#inicio" class="logo-tiles" aria-label="CÚBIKO">
+      <span class="tile t-pink" style="--r:-6deg">C</span>
+      <span class="tile t-lav" style="--r:4deg">Ú</span>
+      <span class="tile t-mint" style="--r:-3deg">B</span>
+      <span class="tile t-butter" style="--r:5deg">I</span>
+      <span class="tile t-pink" style="--r:-4deg">K</span>
+      <span class="tile t-lav" style="--r:3deg">O</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#productos">Productos</a></li>
+        <li class="nav-temas-item">
+          <details class="temas-dropdown">
+            <summary>Temáticas</summary>
+            <ul class="temas-submenu">
+              <li><a href="#productos" data-tema="halloween">🎃 Halloween</a></li>
+              <li><a href="#productos" data-tema="navidad">🎄 Navidad</a></li>
+              <li><a href="#productos" data-tema="san-valentin">💘 San Valentín</a></li>
+              <li><a href="#productos" data-tema="bodas">💍 Bodas</a></li>
+              <li><a href="#productos" data-tema="bautizos">👶 Bautizos</a></li>
+              <li><a href="#productos" data-tema="comuniones">🕊️ Comuniones</a></li>
+              <li><a href="#productos" data-tema="cumpleanos">🎂 Cumpleaños</a></li>
+              <li><a href="#productos" data-tema="aniversario">💞 Aniversario</a></li>
+              <li><a href="#productos" data-tema="regalos-originales">🎁 Regalos originales</a></li>
+              <li><a href="#productos" data-tema="decoracion-hogar">🏡 Decoración hogar</a></li>
+              <li><a href="#productos" data-tema="cocina">🍳 Cocina</a></li>
+              <li><a href="#productos" data-tema="mascotas">🐾 Mascotas</a></li>
+              <li><a href="#productos" data-tema="momentos-especiales">✨ Momentos especiales</a></li>
+              <li><a href="#productos" data-tema="letras-originales">🔤 Letras originales</a></li>
+              <li><a href="#productos" data-tema="dia-madre">💐 Día de la madre</a></li>
+              <li><a href="#productos" data-tema="dia-padre">👔 Día del padre</a></li>
+            </ul>
+          </details>
+        </li>
+        <li><a href="#como-pedir">Cómo pedir</a></li>
+        <li><a href="#envios">Envíos</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <a href="#contacto" class="nav-cta">Pedir</a>
+    <button class="cart-toggle" id="cartToggle" aria-label="Ver carrito">
+      🛍️<span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="menu-toggle" aria-label="Abrir menú">☰</button>
+  </div>
+</header>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compra">
+  <div class="cart-header">
+    <h3>Tu carrito 🛍️</h3>
+    <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty">Tu carrito está vacío.<br>Añade alguna pieza pastel 🎀</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span id="cartTotal">0,00€</span>
+    </div>
+    <button class="btn btn-primary checkout-btn" id="checkoutBtn" disabled>Pedir carrito por WhatsApp</button>
+    <p class="cart-note">Los productos "a consultar" se confirman por WhatsApp antes de cerrar el pedido.</p>
+  </div>
+</aside>
+
+<section class="hero" id="inicio">
+  <div class="blob" style="width:340px;height:340px;background:var(--pink);top:-120px;right:-90px;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--mint);bottom:-100px;left:-80px; opacity:.4;"></div>
+
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow">🧵 Hecho a mano · impreso en 3D</span>
+      <div class="hero-title">
+        <span class="t-pink" style="--r:-4deg">C</span>
+        <span class="t-lav" style="--r:3deg">Ú</span>
+        <span class="t-mint" style="--r:-2deg">B</span>
+        <span class="t-butter" style="--r:5deg">I</span>
+        <span class="t-pink" style="--r:-3deg">K</span>
+        <span class="t-lav" style="--r:4deg">O</span>
+      </div>
+      <p class="sub" style="font-family:'Baloo 2', sans-serif; font-size:clamp(20px,2.6vw,28px); font-weight:600; color:var(--plum); margin-bottom:14px;">Impresiones 3D con alma 🎀</p>
+      <p class="sub">Letras, llaveros y piezas decorativas personalizadas en tonos pastel, diseñadas y fabricadas pieza a pieza en el taller de CÚBIKO. Enviamos a toda España 🇪🇸.</p>
+      <div class="hero-actions">
+        <a href="#productos" class="btn btn-primary">Ver productos</a>
+        <a href="https://wa.me/34639110097?text=%C2%A1Hola%20C%C3%9ABIKO!%20Quiero%20pedir%20algo%20personalizado%20%F0%9F%8E%80" target="_blank" rel="noopener" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.33 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0 0 12.04 2m0 1.67c2.24 0 4.34.87 5.92 2.45a8.23 8.23 0 0 1 2.42 5.79c0 4.55-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.38c0-4.55 3.7-8.24 8.25-8.24M8.53 6.73c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03 0 1.2.87 2.36.99 2.52.12.16 1.69 2.71 4.19 3.7 2.07.82 2.49.66 2.94.62.45-.04 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47" /></svg>
+          Pedir algo personalizado
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="card tall">
+        <!-- Reemplaza por: https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/hero-principal.jpg -->
+        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/hero-principal.jpg" alt="Letras 3D pastel CÚBIKO">
+      </div>
+      <div class="card">
+        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/producto-1.jpg" alt="Detalle producto pastel">
+      </div>
+      <div class="card">
+        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/producto-2.jpg" alt="Detalle producto pastel">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>✧ Envíos a toda España</span>
+    <span>✧ Piezas 100% personalizables</span>
+    <span>✧ Colores pastel a tu elección</span>
+    <span>✧ Hecho en CÚBIKO</span>
+    <span>✧ Envíos a toda España</span>
+    <span>✧ Piezas 100% personalizables</span>
+    <span>✧ Colores pastel a tu elección</span>
+    <span>✧ Hecho en CÚBIKO</span>
+  </div>
+</div>
+
+<section id="productos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Catálogo</span>
+      <h2>Nuestras impresiones</h2>
+      <p>Cada pieza se imprime bajo pedido. Elige el color, el nombre o las iniciales y lo preparamos especialmente para ti.</p>
+    </div>
+
+    <div class="temas-menu" id="temasMenu">
+      <button class="tema-pill active" data-tema="todos">⭐ Todos</button>
+      <button class="tema-pill" data-tema="halloween">🎃 Halloween</button>
+      <button class="tema-pill" data-tema="navidad">🎄 Navidad</button>
+      <button class="tema-pill" data-tema="san-valentin">💘 San Valentín</button>
+      <button class="tema-pill" data-tema="bodas">💍 Bodas</button>
+      <button class="tema-pill" data-tema="bautizos">👶 Bautizos</button>
+      <button class="tema-pill" data-tema="comuniones">🕊️ Comuniones</button>
+      <button class="tema-pill" data-tema="cumpleanos">🎂 Cumpleaños</button>
+      <button class="tema-pill" data-tema="aniversario">💞 Aniversario</button>
+      <button class="tema-pill" data-tema="regalos-originales">🎁 Regalos originales</button>
+      <button class="tema-pill" data-tema="decoracion-hogar">🏡 Decoración hogar</button>
+      <button class="tema-pill" data-tema="cocina">🍳 Cocina</button>
+      <button class="tema-pill" data-tema="mascotas">🐾 Mascotas</button>
+      <button class="tema-pill" data-tema="momentos-especiales">✨ Momentos especiales</button>
+      <button class="tema-pill" data-tema="letras-originales">🔤 Letras originales</button>
+      <button class="tema-pill" data-tema="dia-madre">💐 Día de la madre</button>
+      <button class="tema-pill" data-tema="dia-padre">👔 Día del padre</button>
+    </div>
+    <p class="temas-titulo-activo" id="temasTitulo">Mostrando: <b>todos los productos</b></p>
+
+    <div class="grid-productos" id="gridProductos">
+
+      <div class="producto" data-temas="letras-originales regalos-originales decoracion-hogar cumpleanos bodas bautizos comuniones aniversario dia-madre dia-padre">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre.jpg" alt="Letras 3D con nombre personalizado">
+        </div>
+        <div class="info">
+          <span class="badge">Más pedido</span>
+          <h3>Letras con tu nombre</h3>
+          <p>Set de letras 3D en colores pastel a juego, ideales para decorar o regalar.</p>
+          <div class="fila">
+            <span class="precio">desde 2,50€/letra</span>
+            <button class="mini-btn" onclick="addToCart('letras','Letras con tu nombre',2.50,'desde 2,50€/letra')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto" data-temas="san-valentin aniversario regalos-originales momentos-especiales dia-madre">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/llavero-corazon.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/llavero-corazon.jpg" alt="Llavero corazón pastel">
+        </div>
+        <div class="info">
+          <span class="badge">Nuevo</span>
+          <h3>Llavero corazón</h3>
+          <p>Pequeño detalle con acabado suave, perfecto para mochilas y bolsos.</p>
+          <div class="fila">
+            <span class="precio">3,90€</span>
+            <button class="mini-btn" onclick="addToCart('llavero','Llavero corazón',3.90,'3,90€')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto" data-temas="letras-originales regalos-originales cumpleanos bautizos comuniones">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r.jpg" alt="Inicial personalizada">
+        </div>
+        <div class="info">
+          <span class="badge">Personalizable</span>
+          <h3>Inicial decorativa</h3>
+          <p>Tu inicial en el color que elijas, con textura mate y acabado premium.</p>
+          <div class="fila">
+            <span class="precio">4,50€</span>
+            <button class="mini-btn" onclick="addToCart('inicial','Inicial decorativa',4.50,'4,50€')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto" data-temas="decoracion-hogar momentos-especiales regalos-originales cumpleanos">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa.jpg" alt="Mariposa decorativa pastel">
+        </div>
+        <div class="info">
+          <span class="badge">Favorito</span>
+          <h3>Mariposa decorativa</h3>
+          <p>Figura ligera para adornar cualquier rincón, disponible en varios tonos.</p>
+          <div class="fila">
+            <span class="precio">3,20€</span>
+            <button class="mini-btn" onclick="addToCart('mariposa','Mariposa decorativa',3.20,'3,20€')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto" data-temas="decoracion-hogar regalos-originales cocina cumpleanos aniversario momentos-especiales">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel.jpg" alt="Set piezas pastel">
+        </div>
+        <div class="info">
+          <span class="badge">Pack</span>
+          <h3>Set piezas pastel</h3>
+          <p>Combinación de varias figuras a juego para decorar tu escritorio o taller.</p>
+          <div class="fila">
+            <span class="precio">12,90€</span>
+            <button class="mini-btn" onclick="addToCart('set-pastel','Set piezas pastel',12.90,'12,90€')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto" data-temas="halloween navidad san-valentin bodas bautizos comuniones cumpleanos aniversario regalos-originales decoracion-hogar cocina mascotas momentos-especiales letras-originales dia-madre dia-padre">
+        <div class="foto">
+          <!-- https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/personalizado.jpg -->
+          <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/personalizado.jpg" alt="Pieza a medida">
+        </div>
+        <div class="info">
+          <span class="badge">A medida</span>
+          <h3>Pieza a tu medida</h3>
+          <p>¿Tienes una idea propia? Envíanos el diseño o descríbelo y lo imprimimos.</p>
+          <div class="fila">
+            <span class="precio">consultar</span>
+            <button class="mini-btn" onclick="addToCart('a-medida','Pieza a tu medida',0,'a consultar')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="como-pedir" style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Proceso</span>
+      <h2>Cómo hacer tu pedido</h2>
+      <p>Sencillo, rápido y sin sorpresas. En 4 pasos tu pieza está en camino.</p>
+    </div>
+    <div class="pasos">
+      <div class="paso">
+        <div class="num">1</div>
+        <h3>Elige tu pieza</h3>
+        <p>Mira el catálogo o cuéntanos tu idea personalizada.</p>
+      </div>
+      <div class="paso">
+        <div class="num">2</div>
+        <h3>Elige colores</h3>
+        <p>Escoge la combinación pastel que más te guste.</p>
+      </div>
+      <div class="paso">
+        <div class="num">3</div>
+        <h3>Confirmamos</h3>
+        <p>Te enviamos precio final y tiempo de fabricación por WhatsApp.</p>
+      </div>
+      <div class="paso">
+        <div class="num">4</div>
+        <h3>Recíbelo en casa</h3>
+        <p>Lo empaquetamos con cariño y lo enviamos a toda España.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="envios">
+  <div class="wrap">
+    <div class="envios">
+      <div>
+        <h2>Enviamos a toda España 🇪🇸</h2>
+        <p>Trabajamos con empresas de mensajería nacional para que tu pedido llegue seguro, bien protegido y en el menor tiempo posible.</p>
+        <ul class="lista-envio">
+          <li><span class="check">✓</span> Envío estándar 3–5 días laborables</li>
+          <li><span class="check">✓</span> Envío exprés 24–48h disponible</li>
+          <li><span class="check">✓</span> Envío gratuito en pedidos superiores a 30€</li>
+          <li><span class="check">✓</span> Embalaje cuidado y protegido para piezas 3D</li>
+        </ul>
+      </div>
+      <div class="mapa-card">
+        <div class="fila-info"><span>Península</span><span>3,95€</span></div>
+        <div class="fila-info"><span>Baleares</span><span>5,50€</span></div>
+        <div class="fila-info"><span>Canarias</span><span>consultar</span></div>
+        <div class="fila-info"><span>Envío exprés 24–48h</span><span>+2,90€</span></div>
+        <div class="fila-info"><span>Gratis desde</span><span>30€</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="galeria" style="padding-top:50px;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Taller</span>
+      <h2>Un vistazo a CÚBIKO</h2>
+    </div>
+    <div class="galeria">
+      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-1.jpg" alt="Taller CÚBIKO 1"></div>
+      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-2.jpg" alt="Taller CÚBIKO 2"></div>
+      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-3.jpg" alt="Taller CÚBIKO 3"></div>
+      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-4.jpg" alt="Taller CÚBIKO 4"></div>
+      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-5.jpg" alt="Taller CÚBIKO 5"></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-tiles">
+          <span class="tile t-pink" style="--r:-6deg">C</span>
+          <span class="tile t-lav" style="--r:4deg">Ú</span>
+          <span class="tile t-mint" style="--r:-3deg">B</span>
+          <span class="tile t-butter" style="--r:5deg">O</span>
+        </div>
+        <p>Taller artesanal de impresión 3D. Piezas y letras personalizadas en tonos pastel, hechas con cariño y enviadas a toda España.</p>
+        <div class="social">
+          <a href="https://instagram.com/cubiko" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+          <a href="https://wa.me/34000000000" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
+          <a href="mailto:hola@cubiko.com" aria-label="Email">✉</a>
+        </div>
+      </div>
+      <div>
+        <h3>CONTACTO</h3>
+        <a href="mailto:hola@cubiko.com">hola@cubiko.com</a>
+        <a href="https://wa.me/34000000000" target="_blank" rel="noopener">WhatsApp: +34 000 00 00 00</a>
+        <a href="https://instagram.com/cubiko" target="_blank" rel="noopener">@cubiko</a>
+      </div>
+      <div>
+        <h3>ENLACES</h3>
+        <a href="#productos">Productos</a>
+        <a href="#como-pedir">Cómo pedir</a>
+        <a href="#envios">Envíos</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 CÚBIKO · Hecho a mano en España
+    </div>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.querySelector('.menu-toggle');
+  const navUl = document.querySelector('nav ul');
+  toggle.addEventListener('click', () => {
+    navUl.style.display = navUl.style.display === 'flex' ? 'none' : 'flex';
+    navUl.style.flexDirection = 'column';
+    navUl.style.position = 'absolute';
+    navUl.style.top = '64px';
+    navUl.style.right = '20px';
+    navUl.style.background = '#fff';
+    navUl.style.padding = '18px 24px';
+    navUl.style.borderRadius = '16px';
+    navUl.style.boxShadow = '0 10px 24px rgba(91,59,120,0.18)';
+    navUl.style.gap = '16px';
+  });
+
+  /* ---------- MENÚ DE TEMÁTICAS ---------- */
+  const TEMA_NOMBRES = {
+    'todos':'todos los productos', 'halloween':'Halloween', 'navidad':'Navidad',
+    'san-valentin':'San Valentín', 'bodas':'Bodas', 'bautizos':'Bautizos',
+    'comuniones':'Comuniones', 'cumpleanos':'Cumpleaños', 'aniversario':'Aniversario',
+    'regalos-originales':'Regalos originales', 'decoracion-hogar':'Decoración hogar',
+    'cocina':'Cocina', 'mascotas':'Mascotas', 'momentos-especiales':'Momentos especiales',
+    'letras-originales':'Letras originales', 'dia-madre':'Día de la madre', 'dia-padre':'Día del padre'
+  };
+
+  const temasMenu = document.getElementById('temasMenu');
+  const gridProductos = document.getElementById('gridProductos');
+  const temasTitulo = document.getElementById('temasTitulo');
+  const productos = Array.from(gridProductos.querySelectorAll('.producto'));
+
+  function filtrarTema(tema){
+    let visibles = 0;
+    productos.forEach(p => {
+      const temas = (p.dataset.temas || '').split(' ');
+      const coincide = tema === 'todos' || temas.includes(tema);
+      p.style.display = coincide ? '' : 'none';
+      if(coincide) visibles++;
+    });
+
+    let sinResultados = document.getElementById('sinResultados');
+    if(visibles === 0){
+      if(!sinResultados){
+        sinResultados = document.createElement('div');
+        sinResultados.id = 'sinResultados';
+        sinResultados.className = 'sin-resultados';
+        gridProductos.appendChild(sinResultados);
+      }
+      sinResultados.innerHTML = `
+        <p>Todavía no tenemos piezas listadas para <b>${TEMA_NOMBRES[tema]}</b>,<br>pero podemos crear algo especial para ti 🎀</p>
+        <a href="https://wa.me/34639110097?text=${encodeURIComponent('¡Hola CÚBIKO! Busco algo para ' + TEMA_NOMBRES[tema] + ', ¿me ayudáis?')}" target="_blank" class="btn btn-primary">Consultar por WhatsApp</a>
+      `;
+      sinResultados.style.display = '';
+    } else if(sinResultados){
+      sinResultados.style.display = 'none';
+    }
+
+    temasTitulo.innerHTML = `Mostrando: <b>${TEMA_NOMBRES[tema]}</b>`;
+
+    temasMenu.querySelectorAll('.tema-pill').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tema === tema);
+    });
+  }
+
+  temasMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tema-pill');
+    if(!btn) return;
+    filtrarTema(btn.dataset.tema);
+    btn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  });
+
+  // Enlaces de temáticas dentro del menú hamburguesa / desplegable de navegación
+  document.querySelectorAll('.temas-submenu a[data-tema]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tema = link.dataset.tema;
+      filtrarTema(tema);
+
+      // cerrar el desplegable
+      const details = link.closest('details');
+      if(details) details.removeAttribute('open');
+
+      // cerrar el menú hamburguesa si está abierto (móvil)
+      if(navUl.style.display === 'flex'){
+        navUl.style.display = 'none';
+      }
+
+      document.getElementById('productos').scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  /* ---------- CARRITO ---------- */
+  const WHATSAPP_NUMERO = '34639110097'; // 639110097 con prefijo de España
+
+  let cart = [];
+
+  const cartDrawer   = document.getElementById('cartDrawer');
+  const cartOverlay  = document.getElementById('cartOverlay');
+  const cartItemsEl  = document.getElementById('cartItems');
+  const cartTotalEl  = document.getElementById('cartTotal');
+  const cartCountEl  = document.getElementById('cartCount');
+  const checkoutBtn  = document.getElementById('checkoutBtn');
+
+  function formatoEuro(n){
+    return n.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + '€';
+  }
+
+  function addToCart(id, nombre, precio, precioLabel){
+    const existente = cart.find(p => p.id === id);
+    if(existente){
+      existente.qty += 1;
+    } else {
+      cart.push({id, nombre, precio, precioLabel, qty:1});
+    }
+    renderCart();
+    openCart();
+  }
+
+  function cambiarCantidad(id, delta){
+    const item = cart.find(p => p.id === id);
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty <= 0){
+      cart = cart.filter(p => p.id !== id);
+    }
+    renderCart();
+  }
+
+  function quitarDelCarrito(id){
+    cart = cart.filter(p => p.id !== id);
+    renderCart();
+  }
+
+  function renderCart(){
+    const totalUnidades = cart.reduce((acc, p) => acc + p.qty, 0);
+    cartCountEl.textContent = totalUnidades;
+
+    if(cart.length === 0){
+      cartItemsEl.innerHTML = '<p class="cart-empty">Tu carrito está vacío.<br>Añade alguna pieza pastel 🎀</p>';
+      cartTotalEl.textContent = formatoEuro(0);
+      checkoutBtn.disabled = true;
+      return;
+    }
+
+    checkoutBtn.disabled = false;
+
+    cartItemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <h4>${item.nombre}</h4>
+          <span>${item.precio > 0 ? formatoEuro(item.precio) + ' / ud.' : item.precioLabel}</span>
+        </div>
+        <div class="qty-control">
+          <button onclick="cambiarCantidad('${item.id}', -1)" aria-label="Quitar una unidad">−</button>
+          <span>${item.qty}</span>
+          <button onclick="cambiarCantidad('${item.id}', 1)" aria-label="Añadir una unidad">+</button>
+        </div>
+        <button class="cart-item-remove" onclick="quitarDelCarrito('${item.id}')" aria-label="Eliminar del carrito">🗑</button>
+      </div>
+    `).join('');
+
+    const total = cart.reduce((acc, p) => acc + (p.precio * p.qty), 0);
+    const hayConsultar = cart.some(p => p.precio === 0);
+    cartTotalEl.textContent = formatoEuro(total) + (hayConsultar ? ' + a consultar' : '');
+  }
+
+  function openCart(){
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+  }
+  function closeCart(){
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+  }
+
+  document.getElementById('cartToggle').addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+
+  checkoutBtn.addEventListener('click', () => {
+    if(cart.length === 0) return;
+
+    let mensaje = '¡Hola CÚBIKO! 🎀 Quiero hacer este pedido:\n\n';
+    cart.forEach(item => {
+      const precioTexto = item.precio > 0
+        ? `${formatoEuro(item.precio)} x ${item.qty} = ${formatoEuro(item.precio * item.qty)}`
+        : 'a consultar';
+      mensaje += `• ${item.nombre} (x${item.qty}) — ${precioTexto}\n`;
+    });
+
+    const total = cart.reduce((acc, p) => acc + (p.precio * p.qty), 0);
+    const hayConsultar = cart.some(p => p.precio === 0);
+    mensaje += `\nTotal estimado: ${formatoEuro(total)}${hayConsultar ? ' + piezas a consultar' : ''}`;
+    mensaje += '\n\n¿Me confirmáis disponibilidad y gastos de envío a España? ¡Gracias!';
+
+    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
