@@ -978,18 +978,7 @@
         </a>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="card tall">
-        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/hero-principal.jpg" alt="Letras 3D pastel CÚBIKO">
-      </div>
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/producto-1.jpg" alt="Detalle producto pastel">
-      </div>
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/producto-2.jpg" alt="Detalle producto pastel">
-      </div>
-    </div>
-  </div>
+
 </section>
 <div class="marquee">
   <div class="marquee-track">
@@ -1032,6 +1021,39 @@
     <p class="temas-titulo-activo" id="temasTitulo">Mostrando: <b>todos los productos</b></p>
     <div class="grid-productos" id="gridProductos">
 
+
+
+
+
+
+
+      
+      <div class="producto" id="producto-copos-nieve" data-temas="navidad decoracion-hogar">
+        <div class="foto">
+          <img id="img-copos-nieve" src="https://github.com/CUBIKO3D/CUBIKO/blob/main/images/0AFF9056-3E22-4B98-95D2-30F4A103D1A8%20en%20taman%CC%83o%20mediano.jpeg?raw=true" alt="Copos de Nieve - Nº1">
+        </div>
+        <div class="color-swatches" id="colores-copos-nieve">
+          <button type="button" class="color-swatch active" style="background:#FFFFFF" aria-label="Color Nº1" onclick="seleccionarColor('copos-nieve','Nº1','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/0AFF9056-3E22-4B98-95D2-30F4A103D1A8%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
+          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº2" onclick="seleccionarColor('copos-nieve','Nº2','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/4CF828A1-4B9B-4D8C-9903-D73A1047C8FA%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
+          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº3" onclick="seleccionarColor('copos-nieve','Nº3','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/CA9E126B-26D3-4393-8287-FF71F121809B%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
+          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº4" onclick="seleccionarColor('copos-nieve','Nº4','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/DABD9EBD-9B1E-4626-893A-AD48667A8BF2%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
+        </div>
+        <p class="color-actual" id="colortxt-copos-nieve">Color: <b>Nº1</b></p>
+        <div class="info">
+          <span class="badge">A medida</span>
+          <h3>Copos de Nieve</h3>
+          <p>Pequeño detalle con acabado suave, perfecto para mochilas y bolsos.</p>
+          <div class="fila">
+            <span class="precio">1,00€/copo</span>
+            <button class="mini-btn" onclick="addToCart('copos-nieve','Copos de Nieve',1.00,'1,00€/copo')">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      
       <div class="producto" id="producto-letras" data-temas="letras-originales regalos-originales decoracion-hogar cumpleanos bodas bautizos comuniones aniversario dia-madre dia-padre">
         <div class="foto">
           <img id="img-letras" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-rosa.jpg" alt="Letras 3D con nombre personalizado - Rosa">
@@ -1054,90 +1076,10 @@
         </div>
       </div>
 
-      <div class="producto" id="producto-llavero" data-temas="san-valentin aniversario regalos-originales momentos-especiales dia-madre">
-        <div class="foto">
-          <img id="img-llavero" src="https://raw.githubusercontent.com/CUBIKO3D/CUBIKO/refs/heads/main/0AFF9056-3E22-4B98-95D2-30F4A103D1A8.JPG" alt="Llavero corazón pastel - Rosa">
-        </div>
-        <div class="color-swatches" id="colores-llavero">
-          <button type="button" class="color-swatch active" style="background:#F6B9D2" aria-label="Color Rosa" onclick="seleccionarColor('llavero','Rosa','#F6B9D2','https://raw.githubusercontent.com/CUBIKO3D/CUBIKO/refs/heads/main/0AFF9056-3E22-4B98-95D2-30F4A103D1A8.JPG', this)"></button>
-          <button type="button" class="color-swatch" style="background:#D6BFF0" aria-label="Color Lavanda" onclick="seleccionarColor('llavero','Lavanda','#D6BFF0','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/llavero-corazon-lavanda.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#BCEBD9" aria-label="Color Menta" onclick="seleccionarColor('llavero','Menta','#BCEBD9','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/llavero-corazon-menta.jpg', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-llavero">Color: <b>Rosa</b></p>
-        <div class="info">
-          <span class="badge">Nuevo</span>
-          <h3>Llavero corazón</h3>
-          <p>Pequeño detalle con acabado suave, perfecto para mochilas y bolsos.</p>
-          <div class="fila">
-            <span class="precio">3,90€</span>
-            <button class="mini-btn" onclick="addToCart('llavero','Llavero corazón',3.90,'3,90€')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
 
-      <div class="producto" id="producto-inicial" data-temas="letras-originales regalos-originales cumpleanos bautizos comuniones">
-        <div class="foto">
-          <img id="img-inicial" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r-rosa.jpg" alt="Inicial personalizada - Rosa">
-        </div>
-        <div class="color-swatches" id="colores-inicial">
-          <button type="button" class="color-swatch active" style="background:#F6B9D2" aria-label="Color Rosa" onclick="seleccionarColor('inicial','Rosa','#F6B9D2','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r-rosa.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#D6BFF0" aria-label="Color Lavanda" onclick="seleccionarColor('inicial','Lavanda','#D6BFF0','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r-lavanda.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#BCEBD9" aria-label="Color Menta" onclick="seleccionarColor('inicial','Menta','#BCEBD9','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r-menta.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#FCE49B" aria-label="Color Mantequilla" onclick="seleccionarColor('inicial','Mantequilla','#FCE49B','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/inicial-r-mantequilla.jpg', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-inicial">Color: <b>Rosa</b></p>
-        <div class="info">
-          <span class="badge">Personalizable</span>
-          <h3>Inicial decorativa</h3>
-          <p>Tu inicial en el color que elijas, con textura mate y acabado premium.</p>
-          <div class="fila">
-            <span class="precio">4,50€</span>
-            <button class="mini-btn" onclick="addToCart('inicial','Inicial decorativa',4.50,'4,50€')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
 
-      <div class="producto" id="producto-mariposa" data-temas="decoracion-hogar momentos-especiales regalos-originales cumpleanos">
-        <div class="foto">
-          <img id="img-mariposa" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa-rosa.jpg" alt="Mariposa decorativa pastel - Rosa">
-        </div>
-        <div class="color-swatches" id="colores-mariposa">
-          <button type="button" class="color-swatch active" style="background:#F6B9D2" aria-label="Color Rosa" onclick="seleccionarColor('mariposa','Rosa','#F6B9D2','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa-rosa.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#D6BFF0" aria-label="Color Lavanda" onclick="seleccionarColor('mariposa','Lavanda','#D6BFF0','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa-lavanda.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#BCEBD9" aria-label="Color Menta" onclick="seleccionarColor('mariposa','Menta','#BCEBD9','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/mariposa-menta.jpg', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-mariposa">Color: <b>Rosa</b></p>
-        <div class="info">
-          <span class="badge">Favorito</span>
-          <h3>Mariposa decorativa</h3>
-          <p>Figura ligera para adornar cualquier rincón, disponible en varios tonos.</p>
-          <div class="fila">
-            <span class="precio">3,20€</span>
-            <button class="mini-btn" onclick="addToCart('mariposa','Mariposa decorativa',3.20,'3,20€')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
 
-      <div class="producto" id="producto-set-pastel" data-temas="decoracion-hogar regalos-originales cocina cumpleanos aniversario momentos-especiales">
-        <div class="foto">
-          <img id="img-set-pastel" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel-mixto.jpg" alt="Set piezas pastel - Combinado">
-        </div>
-        <div class="color-swatches" id="colores-set-pastel">
-          <button type="button" class="color-swatch active" style="background:linear-gradient(135deg,#F6B9D2,#D6BFF0)" aria-label="Combinado pastel" onclick="seleccionarColor('set-pastel','Combinado pastel','#D6BFF0','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel-mixto.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#F6B9D2" aria-label="Color Rosa" onclick="seleccionarColor('set-pastel','Rosa','#F6B9D2','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel-rosa.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#BCEBD9" aria-label="Color Menta" onclick="seleccionarColor('set-pastel','Menta','#BCEBD9','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/set-pastel-menta.jpg', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-set-pastel">Color: <b>Combinado pastel</b></p>
-        <div class="info">
-          <span class="badge">Pack</span>
-          <h3>Set piezas pastel</h3>
-          <p>Combinación de varias figuras a juego para decorar tu escritorio o taller.</p>
-          <div class="fila">
-            <span class="precio">12,90€</span>
-            <button class="mini-btn" onclick="addToCart('set-pastel','Set piezas pastel',12.90,'12,90€')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
+      
 
       <div class="producto" id="producto-a-medida" data-temas="halloween navidad san-valentin bodas bautizos comuniones cumpleanos aniversario regalos-originales decoracion-hogar cocina mascotas momentos-especiales letras-originales dia-madre dia-padre">
         <div class="foto">
