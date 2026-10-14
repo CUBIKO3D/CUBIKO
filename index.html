@@ -49,6 +49,12 @@
   }
   a{text-decoration:none; color:inherit;}
   ul{list-style:none;}
+  /* ---------- cursor: punta de flecha 3D rosa oscuro con aristas blancas ---------- */
+  :root{
+    --cubo-cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpolygon points='4,3 4,26 10,20.5 13.5,19' fill='%23EC7FB0' stroke='white' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cpolygon points='4,3 13.5,19 21,19' fill='%23C94F85' stroke='white' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cpolygon points='10,20.5 14.5,29 18,27.5 13.5,19' fill='%23A63A6B' stroke='white' stroke-width='1.3' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, auto;
+  }
+  *, *::before, *::after{cursor:var(--cubo-cursor) !important;}
+  .checkout-btn:disabled{cursor:not-allowed !important;}
   img{max-width:100%; display:block;}
   .wrap{
     max-width:1180px;
@@ -62,6 +68,23 @@
     filter:blur(2px);
     opacity:.55;
     z-index:0;
+  }
+  .blob.float-a{animation:flotarA 9s ease-in-out infinite;}
+  .blob.float-b{animation:flotarB 11s ease-in-out infinite;}
+  @keyframes flotarA{
+    0%,100%{transform:translate(0,0) scale(1);}
+    25%{transform:translate(-40px,30px) scale(1.06);}
+    50%{transform:translate(-15px,70px) scale(0.96);}
+    75%{transform:translate(30px,35px) scale(1.04);}
+  }
+  @keyframes flotarB{
+    0%,100%{transform:translate(0,0) scale(1);}
+    25%{transform:translate(35px,-35px) scale(1.05);}
+    50%{transform:translate(70px,-10px) scale(0.95);}
+    75%{transform:translate(25px,25px) scale(1.06);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .blob.float-a, .blob.float-b{animation:none;}
   }
   /* ---------- header ---------- */
   header{
@@ -190,10 +213,10 @@
     font-size:18px;
     cursor:pointer;
     box-shadow:var(--shadow-sm);
-    transition:transform .2s ease;
+    transition:transform .2s ease, background .2s ease;
     flex-shrink:0;
   }
-  .cart-toggle:hover{transform:translateY(-2px);}
+  .cart-toggle:hover{transform:translateY(-2px); background:#FCE7EF;}
   .cart-count{
     position:absolute;
     top:-6px; right:-6px;
@@ -324,6 +347,7 @@
     box-shadow:var(--shadow-sm);
     line-height:1;
   }
+  .qty-control button:hover{background:#FCE7EF;}
   .qty-control span{
     min-width:16px;
     text-align:center;
@@ -378,18 +402,19 @@
     position:relative;
     padding:70px 28px 90px;
     overflow:hidden;
-    width:1200%;
+    width:100%;
   }
   .hero-inner{
-    max-width:1180px;
+    max-width:760px;
     margin:0 auto;
-    display:grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap:50px;
-    align-items:center;
+    display:block;
     position:relative;
     z-index:2;
+    text-align:center;
   }
+  .hero-inner .hero-title,
+  .hero-inner .hero-actions{justify-content:center;}
+  .hero-inner p.sub{margin-left:auto; margin-right:auto;}
   .eyebrow{
     display:inline-flex;
     align-items:center;
@@ -462,22 +487,6 @@
     box-shadow:0 6px 0 #C96E96, var(--shadow);
   }
   .btn-secondary:hover{transform:translateY(-3px);}
-  .hero-visual{
-    position:relative;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    grid-auto-rows:1fr;
-    gap:16px;
-  }
-  .hero-visual .card{
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:var(--shadow);
-    background:var(--white);
-    aspect-ratio:1/1;
-  }
-  .hero-visual .card img{width:100%; height:100%; object-fit:cover;}
-  .hero-visual .card.tall{grid-row: span 2; aspect-ratio:auto;}
   /* ---------- marquee ---------- */
   .marquee{
     background:var(--plum);
@@ -548,6 +557,7 @@
     transition:transform .18s ease, background .18s ease, color .18s ease;
   }
   .tema-pill:hover{transform:translateY(-2px);}
+  .tema-pill:not(.active):hover{background:#FCE7EF;}
   .tema-pill.active{
     background:var(--pink-deep);
     color:var(--white);
@@ -602,6 +612,7 @@
   .color-swatches{
     display:flex;
     align-items:center;
+    flex-wrap:wrap;
     gap:9px;
     padding:14px 20px 0;
   }
@@ -674,6 +685,13 @@
     cursor:pointer;
   }
   .mini-btn:hover{transform:translateY(-2px);}
+  .cargando{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px 20px;
+    color:var(--plum-soft);
+    font-weight:600;
+  }
   /* ---------- como pedir ---------- */
   .pasos{
     display:grid;
@@ -775,7 +793,7 @@
   .mapa-card .fila-info:last-child{border-bottom:none;}
   .mapa-card .fila-info span:first-child{color:var(--plum-soft); font-weight:600;}
   .mapa-card .fila-info span:last-child{color:var(--plum); font-weight:700;}
-  /* ---------- testimonios / galeria mini ---------- */
+  /* ---------- galeria mini ---------- */
   .galeria{
     display:grid;
     grid-template-columns:repeat(5,1fr);
@@ -861,8 +879,6 @@
   @media (max-width:920px){
     nav ul{display:none;}
     .menu-toggle{display:block;}
-    .hero-inner{grid-template-columns:1fr;}
-    .hero-visual{order:-1;}
     .grid-productos{grid-template-columns:repeat(2,1fr);}
     .pasos{grid-template-columns:repeat(2,1fr);}
     .envios{grid-template-columns:1fr; padding:40px 26px;}
@@ -874,7 +890,6 @@
     .grid-productos{grid-template-columns:1fr;}
     .pasos{grid-template-columns:1fr;}
     .galeria{grid-template-columns:repeat(2,1fr);}
-    .hero-visual{grid-template-columns:1fr 1fr;}
     .tile{width:24px; height:24px; font-size:13px;}
     .nav-cta{padding:9px 14px; font-size:13px;}
     .nav{padding:12px 16px;}
@@ -955,30 +970,28 @@
   </div>
 </aside>
 <section class="hero" id="inicio">
-  <div class="blob" style="width:340px;height:340px;background:var(--pink);top:-120px;right:-90px;"></div>
-  <div class="blob" style="width:260px;height:260px;background:var(--mint);bottom:-100px;left:-80px; opacity:.4;"></div>
+  <div class="blob float-a" style="width:340px;height:340px;background:var(--pink);top:-120px;right:-90px;"></div>
+  <div class="blob float-b" style="width:260px;height:260px;background:var(--mint);bottom:-100px;left:-80px; opacity:.4;"></div>
   <div class="hero-inner">
-    <div>
-      <span class="eyebrow">🧵 Hecho a mano · impreso en 3D</span>
-      <div class="hero-title">
-        <span class="t-pink" style="--r:-4deg">C</span>
-        <span class="t-lav" style="--r:3deg">Ú</span>
-        <span class="t-mint" style="--r:-2deg">B</span>
-        <span class="t-butter" style="--r:5deg">I</span>
-        <span class="t-pink" style="--r:-3deg">K</span>
-        <span class="t-lav" style="--r:4deg">O</span>
-      </div>
-      <p class="sub" style="font-family:'Baloo 2', sans-serif; font-size:clamp(20px,2.6vw,28px); font-weight:600; color:var(--plum); margin-bottom:14px;">Impresiones 3D con alma 🎀</p>
-      <p class="sub">Letras, llaveros y piezas decorativas personalizadas en tonos pastel, diseñadas y fabricadas pieza a pieza en el taller de CÚBIKO. Enviamos a toda España 🇪🇸.</p>
-      <div class="hero-actions">
-        <a href="#productos" class="btn btn-primary">Ver productos</a>
-        <a href="https://wa.me/34639110097?text=%C2%A1Hola%20C%C3%9ABIKO!%20Quiero%20pedir%20algo%20personalizado%20%F0%9F%8E%80" target="_blank" rel="noopener" class="btn btn-secondary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.33 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0 0 12.04 2m0 1.67c2.24 0 4.34.87 5.92 2.45a8.23 8.23 0 0 1 2.42 5.79c0 4.55-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.38c0-4.55 3.7-8.24 8.25-8.24M8.53 6.73c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03 0 1.2.87 2.36.99 2.52.12.16 1.69 2.71 4.19 3.7 2.07.82 2.49.66 2.94.62.45-.04 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47" /></svg>
-          Pedir algo personalizado
-        </a>
-      </div>
+    <span class="eyebrow">🧵 Hecho a mano · impreso en 3D</span>
+    <div class="hero-title">
+      <span class="t-pink" style="--r:-4deg">C</span>
+      <span class="t-lav" style="--r:3deg">Ú</span>
+      <span class="t-mint" style="--r:-2deg">B</span>
+      <span class="t-butter" style="--r:5deg">I</span>
+      <span class="t-pink" style="--r:-3deg">K</span>
+      <span class="t-lav" style="--r:4deg">O</span>
     </div>
-
+    <p class="sub" style="font-family:'Baloo 2', sans-serif; font-size:clamp(20px,2.6vw,28px); font-weight:600; color:var(--plum); margin-bottom:14px;">Impresiones 3D con alma 🎀</p>
+    <p class="sub">Letras, llaveros y piezas decorativas personalizadas en tonos pastel, diseñadas y fabricadas pieza a pieza en el taller de CÚBIKO. Enviamos a toda España 🇪🇸.</p>
+    <div class="hero-actions">
+      <a href="#productos" class="btn btn-primary">Ver productos</a>
+      <a href="https://wa.me/34639110097?text=%C2%A1Hola%20C%C3%9ABIKO!%20Quiero%20pedir%20algo%20personalizado%20%F0%9F%8E%80" target="_blank" rel="noopener" class="btn btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.33 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0 0 12.04 2m0 1.67c2.24 0 4.34.87 5.92 2.45a8.23 8.23 0 0 1 2.42 5.79c0 4.55-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.38c0-4.55 3.7-8.24 8.25-8.24M8.53 6.73c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03 0 1.2.87 2.36.99 2.52.12.16 1.69 2.71 4.19 3.7 2.07.82 2.49.66 2.94.62.45-.04 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47" /></svg>
+        Pedir algo personalizado
+      </a>
+    </div>
+  </div>
 </section>
 <div class="marquee">
   <div class="marquee-track">
@@ -1020,83 +1033,7 @@
     </div>
     <p class="temas-titulo-activo" id="temasTitulo">Mostrando: <b>todos los productos</b></p>
     <div class="grid-productos" id="gridProductos">
-
-
-
-
-
-
-
-      
-      <div class="producto" id="producto-copos-nieve" data-temas="navidad decoracion-hogar">
-        <div class="foto">
-          <img id="img-copos-nieve" src="https://github.com/CUBIKO3D/CUBIKO/blob/main/images/0AFF9056-3E22-4B98-95D2-30F4A103D1A8%20en%20taman%CC%83o%20mediano.jpeg?raw=true" alt="Copos de Nieve - Nº1">
-        </div>
-        <div class="color-swatches" id="colores-copos-nieve">
-          <button type="button" class="color-swatch active" style="background:#FFFFFF" aria-label="Color Nº1" onclick="seleccionarColor('copos-nieve','Nº1','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/0AFF9056-3E22-4B98-95D2-30F4A103D1A8%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
-          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº2" onclick="seleccionarColor('copos-nieve','Nº2','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/4CF828A1-4B9B-4D8C-9903-D73A1047C8FA%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
-          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº3" onclick="seleccionarColor('copos-nieve','Nº3','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/CA9E126B-26D3-4393-8287-FF71F121809B%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
-          <button type="button" class="color-swatch" style="background:#FFFFFF" aria-label="Color Nº4" onclick="seleccionarColor('copos-nieve','Nº4','#FFFFFF','https://github.com/CUBIKO3D/CUBIKO/blob/main/images/DABD9EBD-9B1E-4626-893A-AD48667A8BF2%20en%20taman%CC%83o%20mediano.jpeg?raw=true', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-copos-nieve">Color: <b>Nº1</b></p>
-        <div class="info">
-          <span class="badge">A medida</span>
-          <h3>Copos de Nieve</h3>
-          <p>Pequeño detalle con acabado suave, perfecto para mochilas y bolsos.</p>
-          <div class="fila">
-            <span class="precio">1,00€/copo</span>
-            <button class="mini-btn" onclick="addToCart('copos-nieve','Copos de Nieve',1.00,'1,00€/copo')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
-
-
-
-
-      
-      <div class="producto" id="producto-letras" data-temas="letras-originales regalos-originales decoracion-hogar cumpleanos bodas bautizos comuniones aniversario dia-madre dia-padre">
-        <div class="foto">
-          <img id="img-letras" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-rosa.jpg" alt="Letras 3D con nombre personalizado - Rosa">
-        </div>
-        <div class="color-swatches" id="colores-letras">
-          <button type="button" class="color-swatch active" style="background:#F6B9D2" aria-label="Color Rosa" onclick="seleccionarColor('letras','Rosa','#F6B9D2','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-rosa.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#D6BFF0" aria-label="Color Lavanda" onclick="seleccionarColor('letras','Lavanda','#D6BFF0','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-lavanda.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#BCEBD9" aria-label="Color Menta" onclick="seleccionarColor('letras','Menta','#BCEBD9','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-menta.jpg', this)"></button>
-          <button type="button" class="color-swatch" style="background:#FCE49B" aria-label="Color Mantequilla" onclick="seleccionarColor('letras','Mantequilla','#FCE49B','https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/letras-nombre-mantequilla.jpg', this)"></button>
-        </div>
-        <p class="color-actual" id="colortxt-letras">Color: <b>Rosa</b></p>
-        <div class="info">
-          <span class="badge">Más pedido</span>
-          <h3>Letras con tu nombre</h3>
-          <p>Set de letras 3D en colores pastel a juego, ideales para decorar o regalar.</p>
-          <div class="fila">
-            <span class="precio">desde 2,50€/letra</span>
-            <button class="mini-btn" onclick="addToCart('letras','Letras con tu nombre',2.50,'desde 2,50€/letra')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
-
-
-
-
-      
-
-      <div class="producto" id="producto-a-medida" data-temas="halloween navidad san-valentin bodas bautizos comuniones cumpleanos aniversario regalos-originales decoracion-hogar cocina mascotas momentos-especiales letras-originales dia-madre dia-padre">
-        <div class="foto">
-          <img id="img-a-medida" src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/personalizado.jpg" alt="Pieza a medida">
-        </div>
-        <p class="color-actual">Color: <b>a elegir por WhatsApp</b></p>
-        <div class="info">
-          <span class="badge">A medida</span>
-          <h3>Pieza a tu medida</h3>
-          <p>¿Tienes una idea propia? Envíanos el diseño o descríbelo y lo imprimimos.</p>
-          <div class="fila">
-            <span class="precio">consultar</span>
-            <button class="mini-btn" onclick="addToCart('a-medida','Pieza a tu medida',0,'a consultar')">Añadir 🛒</button>
-          </div>
-        </div>
-      </div>
-
+      <p class="cargando">Cargando catálogo… 🎀</p>
     </div>
   </div>
 </section>
@@ -1161,11 +1098,11 @@
       <h2>Un vistazo a CÚBIKO</h2>
     </div>
     <div class="galeria">
-      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-1.jpg" alt="Taller CÚBIKO 1"></div>
-      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-2.jpg" alt="Taller CÚBIKO 2"></div>
-      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-3.jpg" alt="Taller CÚBIKO 3"></div>
-      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-4.jpg" alt="Taller CÚBIKO 4"></div>
-      <div class="foto"><img src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/imagenes/taller-5.jpg" alt="Taller CÚBIKO 5"></div>
+      <div class="foto"><img src="images/taller-1.jpg" alt="Taller CÚBIKO 1" onerror="this.closest('.foto').style.display='none'"></div>
+      <div class="foto"><img src="images/taller-2.jpg" alt="Taller CÚBIKO 2" onerror="this.closest('.foto').style.display='none'"></div>
+      <div class="foto"><img src="images/taller-3.jpg" alt="Taller CÚBIKO 3" onerror="this.closest('.foto').style.display='none'"></div>
+      <div class="foto"><img src="images/taller-4.jpg" alt="Taller CÚBIKO 4" onerror="this.closest('.foto').style.display='none'"></div>
+      <div class="foto"><img src="images/taller-5.jpg" alt="Taller CÚBIKO 5" onerror="this.closest('.foto').style.display='none'"></div>
     </div>
   </div>
 </section>
@@ -1174,25 +1111,23 @@
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo-tiles">
-      <span class="tile t-pink" style="--r:-6deg">C</span>
-      <span class="tile t-lav" style="--r:4deg">Ú</span>
-      <span class="tile t-mint" style="--r:-3deg">B</span>
-      <span class="tile t-butter" style="--r:5deg">I</span>
-      <span class="tile t-pink" style="--r:-4deg">K</span>
-      <span class="tile t-lav" style="--r:3deg">O</span>
+          <span class="tile t-pink" style="--r:-6deg">C</span>
+          <span class="tile t-lav" style="--r:4deg">Ú</span>
+          <span class="tile t-mint" style="--r:-3deg">B</span>
+          <span class="tile t-butter" style="--r:5deg">I</span>
+          <span class="tile t-pink" style="--r:-4deg">K</span>
+          <span class="tile t-lav" style="--r:3deg">O</span>
         </div>
         <p>Taller artesanal de impresión 3D. Piezas y letras personalizadas en tonos pastel, hechas con cariño y enviadas a toda España.</p>
         <div class="social">
-          <a href="https://instagram.com/cubiko" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
-          <a href="https://wa.me/34000000000" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
-          <a href="mailto:hola@cubiko.com" aria-label="Email">✉</a>
+          <a href="https://instagram.com/cubiko3d.spain" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+          <a href="https://wa.me/34639110097" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
         </div>
       </div>
       <div>
         <h3>CONTACTO</h3>
-        <a href="mailto:hola@cubiko.com">hola@cubiko.com</a>
-        <a href="https://wa.me/34000000000" target="_blank" rel="noopener">WhatsApp: +34 000 00 00 00</a>
-        <a href="https://instagram.com/cubiko" target="_blank" rel="noopener">@cubiko</a>
+        <a href="https://wa.me/34639110097" target="_blank" rel="noopener">WhatsApp: +34 639 11 00 97</a>
+        <a href="https://instagram.com/cubiko3d.spain" target="_blank" rel="noopener">@cubiko3d.spain</a>
       </div>
       <div>
         <h3>ENLACES</h3>
@@ -1207,6 +1142,34 @@
   </div>
 </footer>
 <script>
+  /* =====================================================================
+     CONFIGURACIÓN: pega aquí los 2 enlaces CSV de tu Google Sheets
+     (Archivo → Compartir → Publicar en la web → elegir pestaña → CSV)
+     Si los dejas vacíos, la web muestra el catálogo de ejemplo de abajo.
+     ===================================================================== */
+  const SHEET_PRODUCTOS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSHnri0gomWugCfI_atPt73JJyhNHMYGXRf0WVLHMbb0Naq680KQeI2UVZ_UuvvdOVwiFrIx24iMtv5/pub?gid=647082484&single=true&output=csv';   // pestaña "Productos"
+  const SHEET_COLORES_URL   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSHnri0gomWugCfI_atPt73JJyhNHMYGXRf0WVLHMbb0Naq680KQeI2UVZ_UuvvdOVwiFrIx24iMtv5/pub?gid=1449150749&single=true&output=csv';   // pestaña "Colores"
+  const WHATSAPP_NUMERO     = '34639110097';
+
+  /* ---------- Catálogo de ejemplo (solo si no hay enlaces de Sheets) ---------- */
+  const BLOB = 'https://github.com/CUBIKO3D/CUBIKO/blob/main/images/';
+  const FALLBACK_PRODUCTOS = [
+    {id:'copos-nieve', nombre:'Copos de Nieve', descripcion:'Pequeño detalle con acabado suave. Perfecto para decorar el árbol o regalar.', precio:'1', texto_precio:'1,00€/copo', badge:'A medida', categorias:'navidad, decoracion-hogar', imagen:''},
+    {id:'letras', nombre:'Letras con tu nombre', descripcion:'Set de letras 3D en colores pastel a juego. Ideales para decorar o regalar.', precio:'2.5', texto_precio:'desde 2,50€/letra', badge:'Más pedido', categorias:'letras-originales, regalos-originales, decoracion-hogar, cumpleanos, bodas, bautizos, comuniones, aniversario, dia-madre, dia-padre', imagen:''},
+    {id:'a-medida', nombre:'Pieza a tu medida', descripcion:'¿Tienes una idea propia? Envíanos el diseño o descríbelo y lo imprimimos.', precio:'', texto_precio:'consultar', badge:'A medida', categorias:'todas', imagen:''}
+  ];
+  const FALLBACK_COLORES = [
+    {producto:'copos-nieve', color:'Nº1', hex:'#FFFFFF', imagen:BLOB+'0AFF9056-3E22-4B98-95D2-30F4A103D1A8%20en%20taman%CC%83o%20mediano.jpeg?raw=true'},
+    {producto:'copos-nieve', color:'Nº2', hex:'#FFFFFF', imagen:BLOB+'4CF828A1-4B9B-4D8C-9903-D73A1047C8FA%20en%20taman%CC%83o%20mediano.jpeg?raw=true'},
+    {producto:'copos-nieve', color:'Nº3', hex:'#FFFFFF', imagen:BLOB+'CA9E126B-26D3-4393-8287-FF71F121809B%20en%20taman%CC%83o%20mediano.jpeg?raw=true'},
+    {producto:'copos-nieve', color:'Nº4', hex:'#FFFFFF', imagen:BLOB+'DABD9EBD-9B1E-4626-893A-AD48667A8BF2%20en%20taman%CC%83o%20mediano.jpeg?raw=true'},
+    {producto:'letras', color:'Rosa', hex:'#F6B9D2', imagen:''},
+    {producto:'letras', color:'Lavanda', hex:'#D6BFF0', imagen:''},
+    {producto:'letras', color:'Menta', hex:'#BCEBD9', imagen:''},
+    {producto:'letras', color:'Mantequilla', hex:'#FCE49B', imagen:''}
+  ];
+
+  /* ---------- Menú móvil ---------- */
   const toggle = document.querySelector('.menu-toggle');
   const navUl = document.querySelector('nav ul');
   toggle.addEventListener('click', () => {
@@ -1221,7 +1184,8 @@
     navUl.style.boxShadow = '0 10px 24px rgba(91,59,120,0.18)';
     navUl.style.gap = '16px';
   });
-  /* ---------- MENÚ DE TEMÁTICAS ---------- */
+
+  /* ---------- Utilidades ---------- */
   const TEMA_NOMBRES = {
     'todos':'todos los productos', 'halloween':'Halloween', 'navidad':'Navidad',
     'san-valentin':'San Valentín', 'bodas':'Bodas', 'bautizos':'Bautizos',
@@ -1230,20 +1194,201 @@
     'cocina':'Cocina', 'mascotas':'Mascotas', 'momentos-especiales':'Momentos especiales',
     'letras-originales':'Letras originales', 'dia-madre':'Día de la madre', 'dia-padre':'Día del padre'
   };
-  const temasMenu = document.getElementById('temasMenu');
+  const TEMAS_REALES = Object.keys(TEMA_NOMBRES).filter(k => k !== 'todos');
+
+  function slug(s){
+    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+  function claveCabecera(s){
+    return slug(s).replace(/-/g, '_');
+  }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  // Acepta "Rosa", "rosa", "dia-madre", "Día de la madre", etc.
+  const TEMA_ALIAS = {};
+  TEMAS_REALES.forEach(k => { TEMA_ALIAS[k] = k; TEMA_ALIAS[slug(TEMA_NOMBRES[k])] = k; });
+
+  function parsearTemas(texto){
+    const t = String(texto || '').trim();
+    if(!t) return [];
+    const partes = t.split(/[,;|\n]+/).map(slug).filter(Boolean);
+    if(partes.includes('todas') || partes.includes('todos')) return TEMAS_REALES.slice();
+    const res = [];
+    partes.forEach(p => {
+      if(TEMA_ALIAS[p]) res.push(TEMA_ALIAS[p]);
+      else console.warn('Categoría no reconocida en la hoja:', p);
+    });
+    return res;
+  }
+  function normalizarImagen(url){
+    let u = String(url || '').trim();
+    if(!u) return '';
+    // Enlaces de GitHub "blob" → enlace directo a la imagen
+    const m = u.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+?)(\?.*)?$/i);
+    if(m) u = `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}`;
+    return u;
+  }
+  function limpiarHex(h){
+    const v = String(h || '').trim();
+    if(/^[0-9a-f]{3,8}$/i.test(v)) return '#' + v;
+    if(/^[#a-zA-Z0-9(),.% ]{3,40}$/.test(v)) return v;
+    return '#E5DDEB';
+  }
+  function parsearPrecio(v){
+    const n = parseFloat(String(v || '').replace('€','').replace(/\s/g,'').replace(',', '.'));
+    return isNaN(n) ? 0 : n;
+  }
+  function formatoEuro(n){
+    return n.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + '€';
+  }
+
+  /* ---------- Lector de CSV ---------- */
+  function parsearCSV(texto){
+    const filas = []; let fila = [], campo = '', comillas = false;
+    texto = texto.replace(/^\uFEFF/, '');
+    for(let i = 0; i < texto.length; i++){
+      const c = texto[i];
+      if(comillas){
+        if(c === '"'){
+          if(texto[i+1] === '"'){ campo += '"'; i++; } else comillas = false;
+        } else campo += c;
+      } else if(c === '"'){ comillas = true; }
+      else if(c === ','){ fila.push(campo); campo = ''; }
+      else if(c === '\n' || c === '\r'){
+        if(c === '\r' && texto[i+1] === '\n') i++;
+        fila.push(campo); campo = '';
+        if(fila.some(x => x.trim() !== '')) filas.push(fila);
+        fila = [];
+      } else campo += c;
+    }
+    fila.push(campo);
+    if(fila.some(x => x.trim() !== '')) filas.push(fila);
+    return filas;
+  }
+  function filasAObjetos(filas){
+    if(!filas.length) return [];
+    const cab = filas[0].map(claveCabecera);
+    return filas.slice(1).map(f => {
+      const o = {};
+      cab.forEach((k, i) => { o[k] = (f[i] || '').trim(); });
+      return o;
+    });
+  }
+  async function cargarCSV(url){
+    const r = await fetch(url, {cache:'no-store'});
+    if(!r.ok) throw new Error('No se pudo leer ' + url);
+    return filasAObjetos(parsearCSV(await r.text()));
+  }
+
+  /* ---------- Construcción del catálogo ---------- */
+  let catalogo = [];
+  const estadoColor = {};   // id producto -> índice de color elegido
+
+  function construirCatalogo(filasProd, filasCol){
+    const lista = [];
+    const vistos = {};
+    filasProd.forEach(r => {
+      if(!r.nombre) return;
+      let id = slug(r.id || r.nombre);
+      if(vistos[id]) id = id + '-' + (++vistos[id]); else vistos[id] = 1;
+      const precio = parsearPrecio(r.precio);
+      lista.push({
+        id, clave: slug(r.id || r.nombre), clavesNombre: slug(r.nombre),
+        nombre: r.nombre,
+        descripcion: r.descripcion || '',
+        precio,
+        precioLabel: r.texto_precio || (precio > 0 ? formatoEuro(precio) : 'consultar'),
+        badge: r.badge || '',
+        temas: parsearTemas(r.categorias),
+        imagen: normalizarImagen(r.imagen),
+        colores: []
+      });
+    });
+    filasCol.forEach(r => {
+      const k = slug(r.producto);
+      if(!k || !r.color) return;
+      const p = lista.find(x => x.clave === k || x.clavesNombre === k);
+      if(!p){ console.warn('Color sin producto en la hoja:', r.producto); return; }
+      p.colores.push({nombre:r.color, hex:limpiarHex(r.hex), imagen:normalizarImagen(r.imagen)});
+    });
+    return lista;
+  }
+
+  /* ---------- Pintar productos ---------- */
+  function htmlImagen(p, idx){
+    const c = p.colores[idx];
+    const src = (c && c.imagen) || p.imagen || '';
+    return src ? `<img id="img-${p.id}" src="${esc(src)}" alt="${esc(p.nombre)}${c ? ' - ' + esc(c.nombre) : ''}" loading="lazy">` : '';
+  }
+  function tarjetaHTML(p){
+    const tieneColores = p.colores.length > 0;
+    const swatches = tieneColores ? `
+      <div class="color-swatches">
+        ${p.colores.map((c, i) => `<button type="button" class="color-swatch${i === 0 ? ' active' : ''}" data-pid="${p.id}" data-ci="${i}" style="background:${esc(c.hex)}" aria-label="Color ${esc(c.nombre)}" title="${esc(c.nombre)}"></button>`).join('')}
+      </div>
+      <p class="color-actual" id="colortxt-${p.id}">Color: <b>${esc(p.colores[0].nombre)}</b></p>` :
+      `<p class="color-actual">Color: <b>a elegir por WhatsApp</b></p>`;
+    return `
+      <div class="producto" id="producto-${p.id}" data-temas="${p.temas.join(' ')}">
+        <div class="foto" id="foto-${p.id}">${htmlImagen(p, 0)}</div>
+        ${swatches}
+        <div class="info">
+          ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}
+          <h3>${esc(p.nombre)}</h3>
+          <p>${esc(p.descripcion)}</p>
+          <div class="fila">
+            <span class="precio">${esc(p.precioLabel)}</span>
+            <button class="mini-btn" data-add="${p.id}">Añadir 🛒</button>
+          </div>
+        </div>
+      </div>`;
+  }
   const gridProductos = document.getElementById('gridProductos');
+  function pintarProductos(){
+    if(!catalogo.length){
+      gridProductos.innerHTML = '<p class="cargando">Pronto añadiremos piezas nuevas 🎀</p>';
+      return;
+    }
+    gridProductos.innerHTML = catalogo.map(tarjetaHTML).join('');
+    filtrarTema(temaActual);
+  }
+
+  gridProductos.addEventListener('click', (e) => {
+    const sw = e.target.closest('.color-swatch');
+    if(sw){
+      const p = catalogo.find(x => x.id === sw.dataset.pid);
+      const i = parseInt(sw.dataset.ci, 10);
+      if(!p || !p.colores[i]) return;
+      estadoColor[p.id] = i;
+      document.getElementById('foto-' + p.id).innerHTML = htmlImagen(p, i);
+      document.getElementById('colortxt-' + p.id).innerHTML = `Color: <b>${esc(p.colores[i].nombre)}</b>`;
+      sw.parentElement.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      sw.classList.add('active');
+      return;
+    }
+    const add = e.target.closest('[data-add]');
+    if(add) addToCart(add.dataset.add);
+  });
+
+  /* ---------- Filtro por temáticas ---------- */
+  const temasMenu = document.getElementById('temasMenu');
   const temasTitulo = document.getElementById('temasTitulo');
-  const productos = Array.from(gridProductos.querySelectorAll('.producto'));
+  let temaActual = 'todos';
+
   function filtrarTema(tema){
+    temaActual = tema;
+    const tarjetas = Array.from(gridProductos.querySelectorAll('.producto'));
     let visibles = 0;
-    productos.forEach(p => {
-      const temas = (p.dataset.temas || '').split(' ');
+    tarjetas.forEach(t => {
+      const temas = (t.dataset.temas || '').split(' ');
       const coincide = tema === 'todos' || temas.includes(tema);
-      p.style.display = coincide ? '' : 'none';
+      t.style.display = coincide ? '' : 'none';
       if(coincide) visibles++;
     });
     let sinResultados = document.getElementById('sinResultados');
-    if(visibles === 0){
+    if(tarjetas.length && visibles === 0){
       if(!sinResultados){
         sinResultados = document.createElement('div');
         sinResultados.id = 'sinResultados';
@@ -1251,14 +1396,14 @@
         gridProductos.appendChild(sinResultados);
       }
       sinResultados.innerHTML = `
-        <p>Todavía no tenemos piezas listadas para <b>${TEMA_NOMBRES[tema]}</b>,<br>pero podemos crear algo especial para ti 🎀</p>
-        <a href="https://wa.me/34639110097?text=${encodeURIComponent('¡Hola CÚBIKO! Busco algo para ' + TEMA_NOMBRES[tema] + ', ¿me ayudáis?')}" target="_blank" class="btn btn-primary">Consultar por WhatsApp</a>
+        <p>Todavía no tenemos piezas listadas para <b>${esc(TEMA_NOMBRES[tema])}</b>,<br>pero podemos crear algo especial para ti 🎀</p>
+        <a href="https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent('¡Hola CÚBIKO! Busco algo para ' + TEMA_NOMBRES[tema] + ', ¿me ayudáis?')}" target="_blank" rel="noopener" class="btn btn-primary">Consultar por WhatsApp</a>
       `;
       sinResultados.style.display = '';
     } else if(sinResultados){
       sinResultados.style.display = 'none';
     }
-    temasTitulo.innerHTML = `Mostrando: <b>${TEMA_NOMBRES[tema]}</b>`;
+    temasTitulo.innerHTML = `Mostrando: <b>${esc(TEMA_NOMBRES[tema])}</b>`;
     temasMenu.querySelectorAll('.tema-pill').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tema === tema);
     });
@@ -1272,87 +1417,38 @@
   document.querySelectorAll('.temas-submenu a[data-tema]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      const tema = link.dataset.tema;
-      filtrarTema(tema);
+      filtrarTema(link.dataset.tema);
       const details = link.closest('details');
       if(details) details.removeAttribute('open');
-      if(navUl.style.display === 'flex'){
-        navUl.style.display = 'none';
-      }
+      if(navUl.style.display === 'flex') navUl.style.display = 'none';
       document.getElementById('productos').scrollIntoView({behavior:'smooth'});
     });
   });
 
-  /* ---------- SELECCIÓN DE COLOR POR PRODUCTO ---------- */
-  // Guarda el color elegido actualmente para cada producto (id -> {nombre, hex})
-  const colorSeleccionado = {
-    'copos-nieve': {nombre:'Nº1', hex:'#FFFFFF'},
-    'letras': {nombre:'Rosa', hex:'#F6B9D2'},
-    'llavero': {nombre:'Rosa', hex:'#F6B9D2'},
-    'inicial': {nombre:'Rosa', hex:'#F6B9D2'},
-    'mariposa': {nombre:'Rosa', hex:'#F6B9D2'},
-    'set-pastel': {nombre:'Combinado pastel', hex:'#D6BFF0'}
-  };
-
-  function seleccionarColor(id, colorNombre, colorHex, imgUrl, btnEl){
-    colorSeleccionado[id] = {nombre: colorNombre, hex: colorHex};
-
-    const img = document.getElementById('img-' + id);
-    if(img){ img.src = imgUrl; }
-
-    const txt = document.getElementById('colortxt-' + id);
-    if(txt){ txt.innerHTML = `Color: <b>${colorNombre}</b>`; }
-
-    const contenedor = document.getElementById('colores-' + id);
-    if(contenedor){
-      contenedor.querySelectorAll('.color-swatch').forEach(sw => sw.classList.remove('active'));
-    }
-    if(btnEl){ btnEl.classList.add('active'); }
-  }
-
-  /* ---------- CARRITO ---------- */
-  const WHATSAPP_NUMERO = '34639110097'; // 639110097 con prefijo de España
+  /* ---------- Carrito ---------- */
   let cart = [];
-  const cartDrawer   = document.getElementById('cartDrawer');
-  const cartOverlay  = document.getElementById('cartOverlay');
-  const cartItemsEl  = document.getElementById('cartItems');
-  const cartTotalEl  = document.getElementById('cartTotal');
-  const cartCountEl  = document.getElementById('cartCount');
-  const checkoutBtn  = document.getElementById('checkoutBtn');
-  function formatoEuro(n){
-    return n.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + '€';
-  }
-  function addToCart(id, nombre, precio, precioLabel){
-    // Toma el color que el usuario tenga seleccionado en ese producto (si tiene variantes)
-    const color = colorSeleccionado[id] || null;
-    // Cada combinación producto+color es una línea distinta en el carrito
-    const claveCarrito = color ? (id + '__' + color.nombre) : id;
+  const cartDrawer  = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartTotalEl = document.getElementById('cartTotal');
+  const cartCountEl = document.getElementById('cartCount');
+  const checkoutBtn = document.getElementById('checkoutBtn');
 
-    const existente = cart.find(p => p.claveCarrito === claveCarrito);
-    if(existente){
-      existente.qty += 1;
-    } else {
-      cart.push({id, claveCarrito, nombre, precio, precioLabel, qty:1, color});
-    }
+  function addToCart(id){
+    const p = catalogo.find(x => x.id === id);
+    if(!p) return;
+    const idx = estadoColor[id] || 0;
+    const c = p.colores[idx];
+    const color = c ? {nombre:c.nombre, hex:c.hex} : null;
+    const clave = color ? (id + '__' + color.nombre) : id;
+    const existente = cart.find(x => x.clave === clave);
+    if(existente) existente.qty += 1;
+    else cart.push({clave, id, nombre:p.nombre, precio:p.precio, precioLabel:p.precioLabel, qty:1, color});
     renderCart();
     openCart();
   }
-  function cambiarCantidad(clave, delta){
-    const item = cart.find(p => p.claveCarrito === clave);
-    if(!item) return;
-    item.qty += delta;
-    if(item.qty <= 0){
-      cart = cart.filter(p => p.claveCarrito !== clave);
-    }
-    renderCart();
-  }
-  function quitarDelCarrito(clave){
-    cart = cart.filter(p => p.claveCarrito !== clave);
-    renderCart();
-  }
   function renderCart(){
-    const totalUnidades = cart.reduce((acc, p) => acc + p.qty, 0);
-    cartCountEl.textContent = totalUnidades;
+    cartCountEl.textContent = cart.reduce((a, p) => a + p.qty, 0);
     if(cart.length === 0){
       cartItemsEl.innerHTML = '<p class="cart-empty">Tu carrito está vacío.<br>Añade alguna pieza pastel 🎀</p>';
       cartTotalEl.textContent = formatoEuro(0);
@@ -1361,35 +1457,41 @@
     }
     checkoutBtn.disabled = false;
     cartItemsEl.innerHTML = cart.map(item => `
-      <div class="cart-item">
+      <div class="cart-item" data-clave="${esc(item.clave)}">
         <div class="cart-item-info">
-          <h4>${item.nombre}</h4>
-          <span>${item.precio > 0 ? formatoEuro(item.precio) + ' / ud.' : item.precioLabel}</span>
-          ${item.color ? `<div class="cart-item-color"><span class="dot" style="background:${item.color.hex}"></span>Color: ${item.color.nombre}</div>` : ''}
+          <h4>${esc(item.nombre)}</h4>
+          <span>${item.precio > 0 ? formatoEuro(item.precio) + ' / ud.' : esc(item.precioLabel)}</span>
+          ${item.color ? `<div class="cart-item-color"><span class="dot" style="background:${esc(item.color.hex)}"></span>Color: ${esc(item.color.nombre)}</div>` : ''}
         </div>
         <div class="qty-control">
-          <button onclick="cambiarCantidad('${item.claveCarrito}', -1)" aria-label="Quitar una unidad">−</button>
+          <button data-accion="menos" aria-label="Quitar una unidad">−</button>
           <span>${item.qty}</span>
-          <button onclick="cambiarCantidad('${item.claveCarrito}', 1)" aria-label="Añadir una unidad">+</button>
+          <button data-accion="mas" aria-label="Añadir una unidad">+</button>
         </div>
-        <button class="cart-item-remove" onclick="quitarDelCarrito('${item.claveCarrito}')" aria-label="Eliminar del carrito">🗑</button>
+        <button class="cart-item-remove" data-accion="quitar" aria-label="Eliminar del carrito">🗑</button>
       </div>
     `).join('');
-    const total = cart.reduce((acc, p) => acc + (p.precio * p.qty), 0);
+    const total = cart.reduce((a, p) => a + p.precio * p.qty, 0);
     const hayConsultar = cart.some(p => p.precio === 0);
     cartTotalEl.textContent = formatoEuro(total) + (hayConsultar ? ' + a consultar' : '');
   }
-  function openCart(){
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('open');
-  }
-  function closeCart(){
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('open');
-  }
+  cartItemsEl.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-accion]');
+    if(!b) return;
+    const clave = b.closest('.cart-item').dataset.clave;
+    const item = cart.find(x => x.clave === clave);
+    if(!item) return;
+    if(b.dataset.accion === 'mas') item.qty += 1;
+    if(b.dataset.accion === 'menos') item.qty -= 1;
+    if(b.dataset.accion === 'quitar' || item.qty <= 0) cart = cart.filter(x => x.clave !== clave);
+    renderCart();
+  });
+  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
+  function closeCart(){ cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
   document.getElementById('cartToggle').addEventListener('click', openCart);
   document.getElementById('cartClose').addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
+
   checkoutBtn.addEventListener('click', () => {
     if(cart.length === 0) return;
     let mensaje = '¡Hola CÚBIKO! 🎀 Quiero hacer este pedido:\n\n';
@@ -1400,13 +1502,31 @@
       const colorTexto = item.color ? ` (Color: ${item.color.nombre})` : '';
       mensaje += `• ${item.nombre}${colorTexto} (x${item.qty}) — ${precioTexto}\n`;
     });
-    const total = cart.reduce((acc, p) => acc + (p.precio * p.qty), 0);
+    const total = cart.reduce((a, p) => a + p.precio * p.qty, 0);
     const hayConsultar = cart.some(p => p.precio === 0);
     mensaje += `\nTotal estimado: ${formatoEuro(total)}${hayConsultar ? ' + piezas a consultar' : ''}`;
     mensaje += '\n\n¿Me confirmáis disponibilidad y gastos de envío a España? ¡Gracias!';
-    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`, '_blank');
   });
+
+  /* ---------- Arranque ---------- */
+  (async function iniciar(){
+    try{
+      if(SHEET_PRODUCTOS_URL){
+        const [prods, cols] = await Promise.all([
+          cargarCSV(SHEET_PRODUCTOS_URL),
+          SHEET_COLORES_URL ? cargarCSV(SHEET_COLORES_URL) : Promise.resolve([])
+        ]);
+        catalogo = construirCatalogo(prods, cols);
+      } else {
+        catalogo = construirCatalogo(FALLBACK_PRODUCTOS, FALLBACK_COLORES);
+      }
+    } catch(err){
+      console.error(err);
+      catalogo = construirCatalogo(FALLBACK_PRODUCTOS, FALLBACK_COLORES);
+    }
+    pintarProductos();
+  })();
 </script>
 </body>
 </html>
